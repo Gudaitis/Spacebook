@@ -1,26 +1,25 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
+import { View, TextInput, FlatList, TouchableOpacity, Text, Input } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { Text, View} from 'react-native';
 
-
-
-class FriendScreen extends Component {
+class SearchScreen extends Component {
     constructor(props){
       super(props);
   
       this.state = {
         isLoading: true,
-        listData: []
+        listData: [],
+        friendSearch: ""
       }
     }
-    
-    friendsList = async () => {
+
+
+    searchFriend = async () => {
 
         //Validation here...
-        const user_id = await AsyncStorage.getItem('@user_id');
         const value = await AsyncStorage.getItem('@session_token')
 
-        return fetch("http://localhost:3333/api/1.0.0/user/" + user_id + "/friends", {
+        return fetch("http://localhost:3333/api/1.0.0/search?q=" + this.state.friendSearch, {
             method: 'get',
             headers: {
                 'Content-Type': 'application/json',
@@ -47,12 +46,13 @@ class FriendScreen extends Component {
         console.log(error)
     })
     } 
+    
     componentDidMount() {
         this.unsubscribe = this.props.navigation.addListener('focus', () => {
           this.checkLoggedIn();
         });
       
-        this.friendsList();
+        this.searchFriend();
       }
     
       componentWillUnmount() {
@@ -66,8 +66,8 @@ class FriendScreen extends Component {
         }
       };
 
-    
-    render() {
+
+      render() {
 
         if (this.state.isLoading){
           return (
@@ -89,6 +89,15 @@ class FriendScreen extends Component {
         }else{
           return (
             <View>
+                <TextInput
+                    placeholder="Search for your friend"
+                    onChangeText={(friendSearch) => this.setState({friendSearch})} 
+                    value={this.state.friendSearch}
+                />
+                <TouchableOpacity
+                    onPress={()=> this.searchFriend()}>
+                    <Text>Find</Text>
+               </TouchableOpacity>
               <FlatList
                     data={this.state.listData}
                     renderItem={({item}) => (
@@ -97,6 +106,8 @@ class FriendScreen extends Component {
                         </View>
                     )}
                   />
+                  <View>
+                  </View>
             </View>
           );
         }
@@ -104,4 +115,4 @@ class FriendScreen extends Component {
       }
     }
 
-export default FriendScreen;
+export default SearchScreen;
