@@ -87,9 +87,6 @@ class PostsScreen extends Component {
                     throw 'Something went wrong';
                 }
               })
-              .then((res) => {
-                this.getUserPost();
-              })
             .catch((error) => {
                 console.log(error);
             })

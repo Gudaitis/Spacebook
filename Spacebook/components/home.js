@@ -113,7 +113,6 @@ class HomeScreen extends Component {
             isLoading: false,
             listData: responseJson
             })
-            console.log(listData)
           })
         .catch((error) => {
             console.log(error);
