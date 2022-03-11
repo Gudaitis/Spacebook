@@ -58,6 +58,9 @@ request = async () => {
             'X-Authorization': value
         },
     })
+    .then((res) => {
+        this.request();
+      })
     .then((response) => {
         if(response.status === 200){
             return response.json()
@@ -90,6 +93,9 @@ delFriend = async () => {
             'X-Authorization': value
         },
     })
+    .then((res) => {
+        this.request();
+      })
     .then((response) => {
         if(response.status === 200){
             return response.json()
@@ -157,7 +163,7 @@ render() {
                 data={this.state.listData}
                 renderItem={({item}) => (
                     <View>
-                      <Text>{"You've got a new friend request from" + item.first_name +  " " + item.last_name}</Text>
+                      <Text>{"You've got a new friend request from: " + item.first_name +  " " + item.last_name}</Text>
                       <TouchableOpacity
                      onPress={()=> {this.setState({friend: item.user_id})  
                      this.addFriend()}}>

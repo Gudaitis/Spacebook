@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Text, ScrollView, Button } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-class HomeScreen extends Component{
+class LogoutScreen extends Component{
     constructor(props){
         super(props);
 
@@ -73,4 +73,4 @@ class HomeScreen extends Component{
     }
 }
 
-export default HomeScreen;
+export default LogoutScreen;

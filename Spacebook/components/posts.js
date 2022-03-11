@@ -15,7 +15,7 @@ class PostsScreen extends Component {
     }
 
     getUserPost = async (id) => {
-        const user_id = await AsyncStorage.getItem('@user_id');
+        console.log(id)
         const value = await AsyncStorage.getItem('@session_token');
         return fetch("http://localhost:3333/api/1.0.0/user/" + id + "/post", {
               method: 'get',
@@ -36,8 +36,9 @@ class PostsScreen extends Component {
             .then((responseJson) => {
               this.setState({
                 isLoading: false,
-                listData: responseJson
+                listData: responseJson,
                 })
+                console.log(responseJson)
               })
             .catch((error) => {
                 console.log(error);
@@ -45,6 +46,8 @@ class PostsScreen extends Component {
       }
 
       likeUserPost = async (user_id, post_id) => {
+          console.log(user_id)
+          console.log(post_id)
         const value = await AsyncStorage.getItem('@session_token');
         return fetch("http://localhost:3333/api/1.0.0/user/" + user_id + "/post/" + post_id + "/like", {
               method: 'post',
@@ -61,10 +64,37 @@ class PostsScreen extends Component {
                     throw 'Something went wrong';
                 }
               })
+             
             .catch((error) => {
                 console.log(error);
             })
       }
+
+      unlikeUserPost = async (user_id, post_id) => {
+        const value = await AsyncStorage.getItem('@session_token');
+        return fetch("http://localhost:3333/api/1.0.0/user/" + user_id + "/post/" + post_id + "/like", {
+              method: 'delete',
+              'headers': {
+              'X-Authorization':  value,
+              },
+            })
+            .then((response) => {
+                if(response.status === 200){
+                    return response.json()
+                }else if(response.status === 401){
+                  this.props.navigation.navigate("Login");
+                }else{
+                    throw 'Something went wrong';
+                }
+              })
+              .then((res) => {
+                this.getUserPost();
+              })
+            .catch((error) => {
+                console.log(error);
+            })
+      }
+
       componentDidMount() {
         this.unsubscribe = this.props.navigation.addListener('focus', () => {
           this.checkLoggedIn();
@@ -96,9 +126,7 @@ class PostsScreen extends Component {
                 justifyContent: 'center',
                 alignItems: 'center',
               }}>
-              <Text></Text>
-              <TouchableOpacity
-                onPress={() => this.props.navigation.navigate("Search")}>
+              <TouchableOpacity>
                   <Text>Loading..</Text>
               </TouchableOpacity>
           
@@ -118,8 +146,13 @@ class PostsScreen extends Component {
                           <Text>{"Post from " + item.author.first_name + ": " + item.text}</Text>
                             <Text>{"Likes: " + item.numLikes}</Text>
                             <TouchableOpacity 
-                                onPress={() => this.likeUserPost(item.post_id, item.author.user_id)}>
+                                onPress={() => this.likeUserPost(item.author.user_id, item.post_id)}>
                         <Text>Like?</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity
+                        onPress={() => this.unlikeUserPost(item.author.user_id, item.post_id)}>
+                            <Text>Unlike?</Text>
+
                         </TouchableOpacity>
                         </View>
                     )}

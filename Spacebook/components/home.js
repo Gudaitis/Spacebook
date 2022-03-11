@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {View, Text, FlatList} from 'react-native';
+import {View, Text, FlatList, Button} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
@@ -28,8 +28,6 @@ class HomeScreen extends Component {
       this.checkLoggedIn();
       this.getPost();
     });
-  
-    this.getPost();
   }
 
   componentWillUnmount() {
@@ -75,6 +73,9 @@ class HomeScreen extends Component {
           },
           body: JSON.stringify({text:post})
         })
+        .then((res) => {
+          this.getPost();
+        })
         .then((response) => {
             if(response.status === 200){
                 return response.json()
@@ -112,6 +113,7 @@ class HomeScreen extends Component {
             isLoading: false,
             listData: responseJson
             })
+            console.log(listData)
           })
         .catch((error) => {
             console.log(error);
@@ -126,6 +128,9 @@ class HomeScreen extends Component {
           'headers': {
           'X-Authorization':  value,
           },
+        })
+        .then((res) => {
+          this.getPost();
         })
         .then((response) => {
             if(response.status === 200){
@@ -151,6 +156,9 @@ class HomeScreen extends Component {
           },
           body: JSON.stringify({text:post})
         })
+        .then((res) => {
+          this.getPost();
+        })
         .then((response) => {
             if(response.status === 200){
                 return response.json()
@@ -173,6 +181,9 @@ class HomeScreen extends Component {
           'headers': {
           'X-Authorization':  value,
           },
+        })
+        .then((res) => {
+          this.getPost();
         })
         .then((response) => {
             if(response.status === 200){
@@ -209,11 +220,7 @@ class HomeScreen extends Component {
           <Text>Loading..</Text>
       
         </View>
-
-        
       );
-
-
     }else{
       return (
         <View>
@@ -223,10 +230,10 @@ class HomeScreen extends Component {
           value = {this.state.post}
           />
           
-          <TouchableOpacity 
+          <Button
+          title="Post message"
           onPress={() => this.addPost(this.state.post)}>
-          <Text>Post message!</Text>
-          </TouchableOpacity>
+          </Button>
           <FlatList
                 data={this.state.listData}
                 renderItem={({item}) => (

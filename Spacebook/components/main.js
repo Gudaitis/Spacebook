@@ -5,9 +5,10 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import HomeScreen from './home';
 // import FriendScreen from './friends';
 import Navigation from './navigation';
-import LogoutScreen from './logout';
 import SearchScreen from './search';
 import FriendRequestScreen from './friendrequests';
+import UserProfileScreen from './userprofile';
+import LogoutScreen from './logout';
 
 
 const Tab = createBottomTabNavigator();
@@ -22,7 +23,7 @@ render() {
       <Tab.Screen name="Search" component={SearchScreen} />
       <Tab.Screen name="Friends" component={Navigation} options={{headerShown: false}} />
       <Tab.Screen name="Friend Requests" component={FriendRequestScreen} />
-      <Tab.Screen name="Logout" component={LogoutScreen} />
+      <Tab.Screen name="Profile" component={UserProfileScreen} />
     </Tab.Navigator>
   );
 }

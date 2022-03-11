@@ -17,7 +17,6 @@ class FriendScreen extends Component {
 
         //Validation here...
         const user_id = await AsyncStorage.getItem('@user_id');
-        console.log(user_id);
         const value = await AsyncStorage.getItem('@session_token')
 
         return fetch("http://localhost:3333/api/1.0.0/user/" + user_id + "/friends", {
