@@ -1,8 +1,7 @@
 import React, {Component} from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { Text, View} from 'react-native';
-
-
+import { Text, View, FlatList} from 'react-native';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 
 class FriendScreen extends Component {
     constructor(props){
@@ -18,6 +17,7 @@ class FriendScreen extends Component {
 
         //Validation here...
         const user_id = await AsyncStorage.getItem('@user_id');
+        console.log(user_id);
         const value = await AsyncStorage.getItem('@session_token')
 
         return fetch("http://localhost:3333/api/1.0.0/user/" + user_id + "/friends", {
@@ -37,6 +37,7 @@ class FriendScreen extends Component {
             }
         
     })
+    
     .then((responseJson) => {
         this.setState({
             isLoading:false,
@@ -50,6 +51,7 @@ class FriendScreen extends Component {
     componentDidMount() {
         this.unsubscribe = this.props.navigation.addListener('focus', () => {
           this.checkLoggedIn();
+          this.friendsList();
         });
       
         this.friendsList();
@@ -65,6 +67,42 @@ class FriendScreen extends Component {
             this.props.navigation.navigate('Login');
         }
       };
+      
+
+  getUserPost = async (id) => {
+    const user_id = await AsyncStorage.getItem('@user_id');
+    const value = await AsyncStorage.getItem('@session_token');
+    return fetch("http://localhost:3333/api/1.0.0/user/" + id + "/post", {
+          method: 'get',
+          'headers': {
+          'X-Authorization':  value,
+          },
+        })
+        .then((response) => {
+            if(response.status === 200){
+                return response.json()
+            }else if(response.status === 401){
+              this.props.navigation.navigate("Login");
+            }else{
+                throw 'Something went wrong';
+            }
+        })
+        .then((responseJson) => {
+          console.log("Redirected to user profile", responseJson)
+          this.props.navigation.navigate("Posts");
+        })
+        
+
+        .then((responseJson) => {
+          this.setState({
+            isLoading: false,
+            listData: responseJson
+            })
+          })
+        .catch((error) => {
+            console.log(error);
+        })
+  }
 
     
     render() {
@@ -78,7 +116,11 @@ class FriendScreen extends Component {
                 justifyContent: 'center',
                 alignItems: 'center',
               }}>
-              <Text>Loading..</Text>
+              <Text></Text>
+              <TouchableOpacity
+                onPress={() => this.props.navigation.navigate("Search")}>
+                  <Text>Loading..</Text>
+              </TouchableOpacity>
           
             </View>
     
@@ -86,7 +128,7 @@ class FriendScreen extends Component {
           );
     
     
-        }else{
+        }else {
           return (
             <View>
               <FlatList
@@ -94,6 +136,12 @@ class FriendScreen extends Component {
                     renderItem={({item}) => (
                         <View>
                           <Text>{item.user_givenname} {item.user_familyname}</Text>
+                          <TouchableOpacity
+                          onPress={() => this.props.navigation.navigate("Posts", {"friend_id": item.user_id})}>
+                            
+                            <Text>View Posts</Text>
+
+                          </TouchableOpacity>
                         </View>
                     )}
                   />

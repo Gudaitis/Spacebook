@@ -9,7 +9,8 @@ class FriendRequestsScreen extends Component {
   
       this.state = {
         isLoading: true,
-        listData: []
+        listData: [],
+        friend: 0
 
       }
     }
@@ -51,7 +52,7 @@ request = async () => {
     const user_id = await AsyncStorage.getItem('@user_id');
     const value = await AsyncStorage.getItem('@session_token')
 
-    return fetch("http://localhost:3333/api/1.0.0/friendrequests" + user_id, {
+    return fetch("http://localhost:3333/api/1.0.0/friendrequests/" + this.state.friend, {
         method: 'post',
         headers: {
             'X-Authorization': value
@@ -83,7 +84,7 @@ delFriend = async () => {
     const user_id = await AsyncStorage.getItem('@user_id');
     const value = await AsyncStorage.getItem('@session_token')
 
-    return fetch("http://localhost:3333/api/1.0.0/friendrequests" + user_id, {
+    return fetch("http://localhost:3333/api/1.0.0/friendrequests/" + this.state.friend, {
         method: 'delete',
         headers: {
             'X-Authorization': value
@@ -113,6 +114,7 @@ delFriend = async () => {
 componentDidMount() {
     this.unsubscribe = this.props.navigation.addListener('focus', () => {
       this.checkLoggedIn();
+      this.request();
     });
     this.request();
   }
@@ -157,12 +159,14 @@ render() {
                     <View>
                       <Text>{"You've got a new friend request from" + item.first_name +  " " + item.last_name}</Text>
                       <TouchableOpacity
-                      onPress={() => this.addFriend(item.user_id)}>
-                          <Text>Accept friend</Text>
+                     onPress={()=> {this.setState({friend: item.user_id})  
+                     this.addFriend()}}>
+                         <Text>Accept friend</Text>
 
                       </TouchableOpacity>
                       <TouchableOpacity
-                      onPress={() => this.delFriend(item.user_id)}>
+                      onPress={()=> {this.setState({friend: item.user_id})  
+                      this.delFriend()}}>
                           <Text>Delete friend</Text>
 
                       </TouchableOpacity>

@@ -1,11 +1,10 @@
 
 import React, { Component } from 'react';
-import { Text, View } from 'react-native';
-import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
 import HomeScreen from './home';
-import FriendScreen from './friends';
+// import FriendScreen from './friends';
+import Navigation from './navigation';
 import LogoutScreen from './logout';
 import SearchScreen from './search';
 import FriendRequestScreen from './friendrequests';
@@ -21,7 +20,7 @@ render() {
     <Tab.Navigator>
       <Tab.Screen name="Home" component={HomeScreen} />
       <Tab.Screen name="Search" component={SearchScreen} />
-      <Tab.Screen name="Friends" component={FriendScreen} />
+      <Tab.Screen name="Friends" component={Navigation} options={{headerShown: false}} />
       <Tab.Screen name="Friend Requests" component={FriendRequestScreen} />
       <Tab.Screen name="Logout" component={LogoutScreen} />
     </Tab.Navigator>
