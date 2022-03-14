@@ -1,7 +1,8 @@
 import React, {Component} from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { Text, View, FlatList, TouchableOpacity, ScrollView, Button} from 'react-native';
+import { StyleSheet, Text, View, FlatList, TouchableOpacity, ScrollView, Button, Image} from 'react-native';
 import { TextInput } from 'react-native-gesture-handler';
+import { Camera } from 'expo-camera';
 
 
 class UserProfileScreen extends Component {
@@ -18,15 +19,17 @@ class UserProfileScreen extends Component {
         newEmail: '',
         newPassword: '',
         newFirstName: '',
-        newLastName: ''
+        newLastName: '',
+        photo: null,
 
       }
     }
-    componentDidMount() {
-        this.unsubscribe = this.props.navigation.addListener('focus', () => {
+      componentDidMount() {
+          this.unsubscribe = this.props.navigation.addListener('focus', () => {
           this.checkLoggedIn();
           this.getUserProfile();
-        });   
+          this.get_profile_image();
+        });  
       }
     
       componentWillUnmount() {
@@ -123,8 +126,31 @@ class UserProfileScreen extends Component {
             .catch((error) => {
                 console.log(error);
             })
-
       }
+      get_profile_image = async () => {
+        const user_id = await AsyncStorage.getItem('@user_id');
+        const value = await AsyncStorage.getItem('@session_token');
+        fetch("http://localhost:3333/api/1.0.0/user/" + user_id + "/photo", {
+          method: 'GET',
+          headers: {
+            'X-Authorization': value
+          }
+        })
+        .then((res) => {
+          return res.blob();
+        })
+        .then((resBlob) => {
+          let data = URL.createObjectURL(resBlob);
+          this.setState({
+            photo: data,
+            isLoading: false
+          });
+        })
+        .catch((err) => {
+          console.log("error", err)
+        });
+      }
+    
 
 
       logout = async () => {
@@ -153,25 +179,42 @@ class UserProfileScreen extends Component {
 
     render() {
 
-        if (this.state.isLoading){
-          return (
-            <View
-              style={{
-                flex: 1,
-                flexDirection: 'column',
-                justifyContent: 'center',
-                alignItems: 'center',
-              }}>
-              <Text>Loading..</Text>
-            </View>
-          );
-    
+      if (this.state.isLoading){
+        return (
+          <View
+            style={{
+              flex: 1,
+              flexDirection: 'column',
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}>
+            <Text>Loading..</Text>
+        
+          </View>
+  
+          
+        );
     
         }else{
           return (
             <View>
+              <Image
+            source={{
+              uri: this.state.photo,
+            }}
+            style={{
+              width: 200,
+              height: 200,
+              borderWidth: 5 
+            }}
+          />
+              
                 <Text>{"Hello " + this.state.listData.first_name + " " + this.state.listData.last_name + "\n" + "Your current email address is: " + this.state.listData.email + "\n" + "You currently have: " + this.state.listData.friend_count + " friends!"} </Text>
-               
+
+                <Button
+                title="Update your profile picture"
+                onPress={() => this.props.navigation.navigate("Camera")}/>
+                
                 <TextInput
                placeholder='Enter your first name'
                onChangeText={(first_name) => this.setState({first_name})}
@@ -218,11 +261,8 @@ class UserProfileScreen extends Component {
                   </View>
             </View>
           );
-        }
     }
-
-
-}
+}}
 
 
 
@@ -231,3 +271,28 @@ class UserProfileScreen extends Component {
 
 
 export default UserProfileScreen
+
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+  camera: {
+    flex: 1,
+  },
+  buttonContainer: {
+    flex: 1,
+    backgroundColor: 'transparent',
+    flexDirection: 'row',
+    margin: 20,
+  },
+  button: {
+    flex: 0.1,
+    alignSelf: 'flex-end',
+    alignItems: 'center',
+  },
+  text: {
+    fontSize: 18,
+    color: 'white',
+  },
+});

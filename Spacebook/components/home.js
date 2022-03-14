@@ -250,9 +250,10 @@ class HomeScreen extends Component {
                         placeholder='Update your post...'
                         onChangeText={(updatePost) => this.setState({updatePost})}
                         value = {this.state.updatePost}
+                        
                       />
                       <TouchableOpacity
-                      onPress={() => this.updatePost(item.post_id, this.state.updatePost)}
+                      onPress={() => {this.updatePost(item.post_id, this.state.updatePost)}}
                       >
                       <Text>Update post...</Text>
 
