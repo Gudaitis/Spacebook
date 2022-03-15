@@ -29,10 +29,10 @@ request = async () => {
     .then((response) => {
         if(response.status === 200){
             return response.json()
-        }else if(response.status === 400){
-            throw 'Invalid email or password';
-        }else{
-            throw 'Something went wrong';
+        }else if(response.status === 401){
+            throw 'Unauthorised';
+        }else if(response.status === 500){
+            throw 'Server error';
         }
     
 })
@@ -64,10 +64,12 @@ request = async () => {
     .then((response) => {
         if(response.status === 200){
             return response.json()
-        }else if(response.status === 400){
-            throw 'Invalid email or password';
-        }else{
-            throw 'Something went wrong';
+        }else if(response.status === 401){
+            throw 'Unauthorised';
+        }else if(response.status === 404){
+            throw 'Not found'
+        }else if(response.status === 500){
+            throw 'Server error';
         }
     
 })
@@ -96,14 +98,17 @@ delFriend = async () => {
     .then((res) => {
         this.request();
       })
-    .then((response) => {
+      .then((response) => {
         if(response.status === 200){
             return response.json()
-        }else if(response.status === 400){
-            throw 'Invalid email or password';
-        }else{
-            throw 'Something went wrong';
+        }else if(response.status === 401){
+            throw 'Unauthorised';
+        }else if(response.status === 404){
+            throw 'Not found'
+        }else if(response.status === 500){
+            throw 'Server error';
         }
+    
 })
 .then((responseJson) => {
     this.setState({

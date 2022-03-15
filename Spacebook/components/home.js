@@ -1,9 +1,9 @@
 import React, {Component} from 'react';
-import {View, Text, FlatList, Button} from 'react-native';
+import {View, Text, FlatList, Button, StyleSheet, TouchableOpacity, TextInput, ScrollView} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { AutoFocus } from 'expo-camera/build/Camera.types';
 
-import { TextInput, TouchableOpacity } from 'react-native-gesture-handler';
 
 
 const Tab = createBottomTabNavigator();
@@ -34,33 +34,6 @@ class HomeScreen extends Component {
     this.unsubscribe();
   }
 
-  getData = async () => {
-    const value = await AsyncStorage.getItem('@session_token');
-    return fetch("http://localhost:3333/api/1.0.0/search", {
-          'headers': {
-            'X-Authorization':  value
-          }
-        })
-        .then((response) => {
-            if(response.status === 200){
-                return response.json()
-            }else if(response.status === 401){
-              this.props.navigation.navigate("Login");
-            }else{
-                throw 'Something went wrong';
-            }
-        })
-        .then((responseJson) => {
-          this.setState({
-            isLoading: false,
-            listData: responseJson
-          })
-        })
-        .catch((error) => {
-            console.log(error);
-        })
-  }
-
 
   addPost = async (post) => {
     const user_id = await AsyncStorage.getItem('@user_id');
@@ -77,14 +50,18 @@ class HomeScreen extends Component {
           this.getPost();
         })
         .then((response) => {
-            if(response.status === 200){
-                return response.json()
-            }else if(response.status === 401){
-              this.props.navigation.navigate("Login");
-            }else{
-                throw 'Something went wrong';
-            }
-        })
+          if(response.status === 200){
+              return response.json()
+          }else if(response.status === 201){
+            throw 'Created';
+          }else if(response.status === 401){
+              throw 'Unauthorised';
+          }else if(response.status === 404){
+              throw 'Not found';
+          }else if(response.status === 500){
+              throw 'Server error';
+          }  
+  })
         .catch((error) => {
             console.log(error);
         })
@@ -103,9 +80,13 @@ class HomeScreen extends Component {
             if(response.status === 200){
                 return response.json()
             }else if(response.status === 401){
-              this.props.navigation.navigate("Login");
-            }else{
-                throw 'Something went wrong';
+              throw 'Unauthorised'
+            }else if(response.status === 403){
+              throw 'Can only view the posts of yourself or your friends';
+            }else if(response.status === 404){
+              throw 'Not found';
+            }else if(response.status === 500){
+              throw 'Server Error';
             }
         })
         .then((responseJson) => {
@@ -132,14 +113,18 @@ class HomeScreen extends Component {
           this.getPost();
         })
         .then((response) => {
-            if(response.status === 200){
-                return response.json()
-            }else if(response.status === 401){
-              this.props.navigation.navigate("Login");
-            }else{
-                throw 'Something went wrong';
-            }
-          })
+          if(response.status === 200){
+              return response.json()
+          }else if(response.status === 401){
+            throw 'Unauthorised'
+          }else if(response.status === 403){
+            throw 'Forbidden - you can only delete your own posts';
+          }else if(response.status === 404){
+            throw 'Not found';
+          }else if(response.status === 500){
+            throw 'Server Error';
+          }
+      })
         .catch((error) => {
             console.log(error);
         })
@@ -159,14 +144,20 @@ class HomeScreen extends Component {
           this.getPost();
         })
         .then((response) => {
-            if(response.status === 200){
-                return response.json()
-            }else if(response.status === 401){
-              this.props.navigation.navigate("Login");
-            }else{
-                throw 'Something went wrong';
-            }
-          })
+          if(response.status === 200){
+              return response.json()
+          }else if(response.status === 400){
+            throw 'Bad Request'
+          }else if(response.status === 401){
+            throw 'Unauthorised'
+          }else if(response.status === 403){
+            throw 'Can only view the posts of yourself or your friends';
+          }else if(response.status === 404){
+            throw 'Not found';
+          }else if(response.status === 500){
+            throw 'Server Error';
+          }
+      })
         .catch((error) => {
             console.log(error);
         })
@@ -185,14 +176,18 @@ class HomeScreen extends Component {
           this.getPost();
         })
         .then((response) => {
-            if(response.status === 200){
-                return response.json()
-            }else if(response.status === 401){
-              this.props.navigation.navigate("Login");
-            }else{
-                throw 'Something went wrong';
-            }
-          })
+          if(response.status === 200){
+              return response.json()
+          }else if(response.status === 401){
+            throw 'Unauthorised'
+          }else if(response.status === 403){
+            throw 'Forbidden - You have already liked this post';
+          }else if(response.status === 404){
+            throw 'Not found';
+          }else if(response.status === 500){
+            throw 'Server Error';
+          }
+      })
         .catch((error) => {
             console.log(error);
         })
@@ -222,56 +217,61 @@ class HomeScreen extends Component {
       );
     }else{
       return (
-        <View>
-          <TextInput
-          placeholder='Type your message here...'
-          onChangeText={(post) => this.setState({post})}
-          value = {this.state.post}
-          />
-          
-          <Button
-          title="Post message"
-          onPress={() => this.addPost(this.state.post)}>
-          </Button>
-          <FlatList
+        
+        <View style={styles.container}>
+            <View style={styles.welcomeContainer} multiline={true}><Text style={styles.welcome}>{"Welcome to your feed" + " " }</Text>
+            <TextInput style={styles.textinput}
+                placeholder='Type your message here...'
+                onChangeText={(post) => this.setState({post})}/>
+                <TouchableOpacity
+                onPress={() => this.addPost(this.state.post)}>
+                <Text >Post Message</Text>
+                </TouchableOpacity>
+            </View>
+            <View style={{backgroundColor: 'white'}}><Text style={{fontSize: 15, fontWeight: 'bold', alignSelf: 'center', color: 'black'}}>View your posts here: </Text></View>
+            
+            <View style={styles.flatlistContainer}>
+              <FlatList
                 data={this.state.listData}
-                renderItem={({item}) => (
-                    <View>
-                      <Text>{"Post from " + item.author.first_name + ": " + item.text}</Text>
-                      <Text>{"Likes: " + item.numLikes}</Text>
-                      <TouchableOpacity
-                      onPress={() => this.delPost(item.post_id)}
-                      >
-                      <Text>Delete</Text>
-                      </TouchableOpacity>
-
-
-                      <TextInput
-                        placeholder='Update your post...'
-                        onChangeText={(updatePost) => this.setState({updatePost})}
-                        value = {this.state.updatePost}
-                        
-                      />
-                      <TouchableOpacity
-                      onPress={() => {this.updatePost(item.post_id, this.state.updatePost)}}
-                      >
-                      <Text>Update post...</Text>
-
-                      </TouchableOpacity>
-
-                      <TouchableOpacity 
-                      onPress={() => this.likePost(item.post_id)}
-                      >
-                        <Text>Like?</Text>
-                        </TouchableOpacity>
+                renderItem={({item}) => ( 
+                  <>
+                  <View style={styles.postContainer}>
+                    <View style={{ flexDirection: 'row', justifyContent: "space-evenly", }}>
+                    <Text>{"Likes: " + item.numLikes}</Text>
                     </View>
+                    <Text style={styles.userMessage}>{item.text}</Text>
+                    
+
+
+                    <View style={{ flexDirection: 'row', justifyContent: "space-evenly", paddingTop: 5, paddingBottom: 45}}>
+                      <TextInput
+                        placeholder='Update your post'
+                        onChangeText={(updatePost) => this.setState({ updatePost })} />
+
+                      <TouchableOpacity
+                        onPress={() => { this.updatePost(item.post_id, this.state.updatePost); } }>
+                        <Text>Update post</Text>
+                      </TouchableOpacity>
+                      <TouchableOpacity
+                        onPress={() => this.delPost(item.post_id)}>
+                        <Text>Delete</Text>
+                      </TouchableOpacity>
+
+                      <TouchableOpacity
+                        onPress={() => this.likePost(item.post_id)}>
+                        <Text>Like?</Text>
+                      </TouchableOpacity>  
+                    </View>
+
+              
+
+                  </View></>
                 )}
                 
               />
-              <View>
-
-              </View>
+            </View>
         </View>
+        
       );
     }
     
@@ -281,3 +281,90 @@ class HomeScreen extends Component {
 
 
 export default HomeScreen;
+
+
+const styles = StyleSheet.create({
+  container: 
+  {
+    backgroundColor: "dodgerblue",
+    flex: 1,
+  },
+
+  flatlistContainer:
+  {
+    paddingTop: "5%",
+    backgroundColor: "white",
+    flex: 1,
+    paddingHorizontal: 15,
+  },
+
+  postContainer:
+  {
+    flex: 1,
+    backgroundColor: "white",
+      
+  },
+  welcome:
+  {
+    fontSize: 25,
+    color: '#fff',
+    fontWeight: "bold"
+  },
+  welcomeContainer:
+  {
+    flex: 0.4,
+    justifyContent: "center",
+    alignItems: "center",
+    paddingBottom: 20,
+    borderBottomWidth: 2,
+    borderBottomColor: 'white'
+
+  },
+  textinput:
+  {
+    borderRadius: 25,
+    borderWidth: 1,
+    borderColor: '#fff',
+    justifyContent: "center",
+    paddingBottom: "3%",
+    paddingTop: "3%",
+    paddingLeft: "5%",
+    paddingRight: "5%",
+    
+  },
+  text:
+  {
+    fontSize: 15,
+    justifyContent: 'flex-start',
+    paddingBottom: 5,
+
+  },
+  
+  userMessage:
+  {
+    flex: 1,
+    fontWeight: 'bold',
+    color: "white",
+    fontSize: 15,
+    alignSelf: "center",
+    borderColor: 'dodgerblue',
+    backgroundColor: "#1084ff",
+    paddingHorizontal: 40,
+    paddingTop: 10,
+    paddingBottom: 15,
+    borderRadius: 20,
+    shadowColor: '#000000',
+    shadowOffset: {
+      width: 1,
+      height: 3
+    },
+    shadowRadius: 3,
+    shadowOpacity: 1.0
+  },
+  delButton:
+  {
+
+  }
+
+  
+});

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, TextInput, FlatList, TouchableOpacity, Text, Input } from 'react-native';
+import { View, TextInput, FlatList, TouchableOpacity, Text, Input, StyleSheet } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
@@ -124,34 +124,39 @@ class SearchScreen extends Component {
     
         }else{
           return (
-            <View>
-                <TextInput
+            <View style={styles.container}>
+              <View style={styles.welcomeContainer}><Text style={{fontSize: 25, color: 'white'}}>Find your friends here!</Text>
+              <TextInput style={styles.textinput}
                     placeholder="Search for your friend"
                     onChangeText={(friendSearch) => this.setState({friendSearch})} 
                     value={this.state.friendSearch}
                 />
-                <TouchableOpacity
+              <TouchableOpacity 
                     onPress={()=> this.searchFriend()}>
                     <Text>Find</Text>
                </TouchableOpacity>
-              <FlatList
+              </View>
+               
+              <View style={styles.flatlistContainer}>
+              <FlatList 
                     
                     data={this.state.listData}
                     renderItem={({item}) => (
                         <View>
-                          <Text>{item.user_givenname} {item.user_familyname}</Text>
-                          
-                          <TouchableOpacity
+                          <Text style={{fontSize: 15, color: 'black', fontWeight: "bold"}}>{item.user_givenname} {item.user_familyname}</Text>
+
+                          <View> <TouchableOpacity
                           value={item}
                           onPress={()=> {this.setState({addedFriend: item.user_id})  
                           this.addFriend()}}>
-                          <Text>Add friend</Text>
-                          </TouchableOpacity>
+                          <Text style={{color: '#00ff00', paddingBottom: 10}}>Add friend</Text>
+                          </TouchableOpacity></View>
                         </View>
                     )}
                   />
                   <View>
                   </View>
+              </View> 
             </View>
           );
         }
@@ -160,3 +165,39 @@ class SearchScreen extends Component {
     }
 
 export default SearchScreen;
+
+const styles = StyleSheet.create({
+  container: 
+  {
+    backgroundColor: "dodgerblue",
+    flex: 1,
+  },
+  welcomeContainer:
+  {
+    justifyContent: "center",
+    alignItems: "center",
+    paddingTop: -50,
+    borderBottomWidth: 2,
+    borderBottomColor: 'white'
+  },
+  flatlistContainer:
+  {
+    backgroundColor: 'white',
+    flex: 1,
+    paddingHorizontal: 15,
+  },
+  textinput:
+  {
+    borderRadius: 25,
+    borderWidth: 1,
+    borderColor: '#fff',
+    paddingHorizontal: 5,
+    shadowColor: '#000000',
+    shadowOffset: {
+      width: 1,
+      height: 0.3
+    },
+    shadowRadius: 1,
+    shadowOpacity: 1.0
+  },
+});

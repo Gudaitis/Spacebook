@@ -13,6 +13,17 @@ class PostsScreen extends Component {
 
       }
     }
+    componentDidMount() {
+      this.unsubscribe = this.props.navigation.addListener('focus', () => {
+        this.checkLoggedIn();
+        this.getUserPost(friend_id);
+      });
+      let {friend_id} = this.props.route.params;
+    }
+  
+    componentWillUnmount() {
+      this.unsubscribe();
+    }
 
     getUserPost = async (id) => {
         console.log(id)
@@ -24,14 +35,18 @@ class PostsScreen extends Component {
               },
             })
             .then((response) => {
-                if(response.status === 200){
-                    return response.json()
-                }else if(response.status === 401){
-                  this.props.navigation.navigate("Login");
-                }else{
-                    throw 'Something went wrong';
-                }
-            })
+              if(response.status === 200){
+                  return response.json()
+              }else if(response.status === 401){
+                throw 'Unauthorised'
+              }else if(response.status === 403){
+                throw 'Can only view the posts of yourself or your friends';
+              }else if(response.status === 404){
+                throw 'Not found';
+              }else if(response.status === 500){
+                throw 'Server Error';
+              }
+          })
             
             .then((responseJson) => {
               this.setState({
@@ -56,15 +71,19 @@ class PostsScreen extends Component {
               },
             })
             .then((response) => {
-                if(response.status === 200){
-                    return response.json()
-                }else if(response.status === 401){
-                  this.props.navigation.navigate("Login");
-                }else{
-                    throw 'Something went wrong';
-                }
-              })
-             
+              if(response.status === 200){
+                  return response.json()
+              }else if(response.status === 401){
+                throw 'Unauthorised'
+              }else if(response.status === 403){
+                throw 'Forbidden - You have already liked this post';
+              }else if(response.status === 404){
+                throw 'Not found';
+              }else if(response.status === 500){
+                throw 'Server Error';
+              }
+          })
+
             .catch((error) => {
                 console.log(error);
             })
@@ -79,31 +98,26 @@ class PostsScreen extends Component {
               },
             })
             .then((response) => {
-                if(response.status === 200){
-                    return response.json()
-                }else if(response.status === 401){
-                  this.props.navigation.navigate("Login");
-                }else{
-                    throw 'Something went wrong';
-                }
+              if(response.status === 200){
+                  return response.json()
+              }else if(response.status === 401){
+                throw 'Unauthorised'
+              }else if(response.status === 403){
+                throw 'Forbidden - You have not liked this post';
+              }else if(response.status === 404){
+                throw 'Not found';
+              }else if(response.status === 500){
+                throw 'Server Error';
+              }
+          })
+              .then((res) => {
+                this.getUserPost(friend_id);
               })
             .catch((error) => {
                 console.log(error);
             })
       }
 
-      componentDidMount() {
-        this.unsubscribe = this.props.navigation.addListener('focus', () => {
-          this.checkLoggedIn();
-          this.getUserPost(friend_id);
-        });
-        let {friend_id} = this.props.route.params;
-        this.getUserPost(friend_id);
-      }
-    
-      componentWillUnmount() {
-        this.unsubscribe();
-      }
     
     checkLoggedIn = async () => {
         const value = await AsyncStorage.getItem('@session_token');

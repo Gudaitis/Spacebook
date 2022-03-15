@@ -57,9 +57,11 @@ class UserProfileScreen extends Component {
                 if(response.status === 200){
                     return response.json()
                 }else if(response.status === 401){
-                  this.props.navigation.navigate("Login");
-                }else{
-                    throw 'Something went wrong';
+                    throw 'Unauthorised';
+                }else if(response.status === 404){
+                    throw 'Not found';
+                }else if(response.status === 500){
+                    throw 'Server error';
                 }
             })
             
@@ -109,14 +111,20 @@ class UserProfileScreen extends Component {
               this.getUserProfile();
             })
             .then((response) => {
-                if(response.status === 200){
-                    return response.json()
-                }else if(response.status === 401){
-                  this.props.navigation.navigate("Login");
-                }else{
-                    throw 'Something went wrong';
-                }        
-            })
+              if(response.status === 200){
+                  return response.json()
+              }else if(response.status === 400){
+                  throw 'Bad request'
+              }else if(response.status === 401){
+                  throw 'Unauthorised';
+              }else if(response.status === 403){
+                  throw 'Forbidden'
+              }else if(response.status === 404){
+                  throw 'Not found';
+              }else if(response.status === 500){
+                  throw 'Server error';
+              }
+          })
             .then((responseJson) => {
               this.setState({
                 isLoading: false,
@@ -146,6 +154,17 @@ class UserProfileScreen extends Component {
             isLoading: false
           });
         })
+        .then((response) => {
+          if(response.status === 200){
+              return response.json()
+          }else if(response.status === 401){
+              throw 'Unauthorised';
+          }else if(response.status === 404){
+              throw 'Not found';
+          }else if(response.status === 500){
+              throw 'Server error';
+          }
+      })
         .catch((err) => {
           console.log("error", err)
         });

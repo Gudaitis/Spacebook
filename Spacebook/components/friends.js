@@ -27,15 +27,19 @@ class FriendScreen extends Component {
             },
         })
         .then((response) => {
-            if(response.status === 200){
-                return response.json()
-            }else if(response.status === 400){
-                throw 'Invalid email or password';
-            }else{
-                throw 'Something went wrong';
-            }
-        
-    })
+          if(response.status === 200){
+              return response.json()
+          }else if(response.status === 401){
+              throw 'Unauthorised';
+          }else if(response.status === 403){
+            throw 'Can only view the friends of yourself or your friends'
+          }else if(response.status === 404){
+              throw 'Not found'
+          }else if(response.status === 500){
+              throw 'Server error';
+          }
+      
+  })
     
     .then((responseJson) => {
         this.setState({
@@ -78,14 +82,19 @@ class FriendScreen extends Component {
           },
         })
         .then((response) => {
-            if(response.status === 200){
-                return response.json()
-            }else if(response.status === 401){
-              this.props.navigation.navigate("Login");
-            }else{
-                throw 'Something went wrong';
-            }
-        })
+          if(response.status === 200){
+              return response.json()
+          }else if(response.status === 401){
+              throw 'Unauthorised';
+          }else if(response.status === 403){
+            throw 'Can only view the posts of yourself or your friends'
+          }else if(response.status === 404){
+              throw 'Not found'
+          }else if(response.status === 500){
+              throw 'Server error';
+          }
+      
+  })
         .then((responseJson) => {
           console.log("Redirected to user profile", responseJson)
           this.props.navigation.navigate("Posts");
