@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { Text, View, FlatList} from 'react-native';
+import { Text, View, FlatList, StyleSheet, ImageBackground} from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 
 class FriendScreen extends Component {
@@ -138,21 +138,31 @@ class FriendScreen extends Component {
     
         }else {
           return (
-            <View>
+
+            <View style={styles.container}>
+              <ImageBackground source={require('../assets/header.jpg')} style={styles.bgImage}>
+              <View style={styles.welcomeContainer}>
+                <Text style={styles.welcome}>See your friends here</Text>
+              </View>
+              </ImageBackground>
+
+              <View style={styles.flatlistContainer}>
               <FlatList
                     data={this.state.listData}
                     renderItem={({item}) => (
                         <View>
-                          <Text>{item.user_givenname} {item.user_familyname}</Text>
+                          <Text style={{fontSize: 15, color: 'black', fontWeight: "bold"}}>{item.user_givenname} {item.user_familyname}</Text>
                           <TouchableOpacity
                           onPress={() => this.props.navigation.navigate("Posts", {"friend_id": item.user_id})}>
                             
-                            <Text>View Posts</Text>
+                            <Text style={{paddingBottom: 10}}>View Posts</Text>
 
                           </TouchableOpacity>
                         </View>
                     )}
+                      
                   />
+              </View>        
             </View>
           );
         }
@@ -161,3 +171,35 @@ class FriendScreen extends Component {
     }
 
 export default FriendScreen;
+
+const styles = StyleSheet.create({
+  container: 
+  {
+    flex: 1,
+  },
+  welcomeContainer:
+  {
+    alignItems: "center",
+    flex: 1,
+    paddingBottom: 60,
+  },
+  flatlistContainer:
+  {
+    backgroundColor: 'white',
+    paddingHorizontal: 15,
+    justifyContent: 'center',
+    flex: 1,
+  },
+  welcome:
+  {
+   marginTop: 45,
+   alignSelf: 'center',
+   fontSize: 25,
+   color: '#fff',
+   fontWeight: "bold",
+  },
+  bgImage: 
+  {
+    resizeMode: 'stretch',
+  }
+});

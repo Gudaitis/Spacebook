@@ -12,8 +12,8 @@ const Stack = createNativeStackNavigator();
 function Navigation (){
         return (
                 <Stack.Navigator>
-                    <Stack.Screen name="Friends" component={FriendScreen} />
-                    <Stack.Screen name="Posts" component={PostsScreen} />
+                    <Stack.Screen name="Friends" component={FriendScreen} options={{headerShown: false}} />
+                    <Stack.Screen name="Posts" component={PostsScreen}  />
                 </Stack.Navigator>
 
         );

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, TextInput, FlatList, TouchableOpacity, Text, Input, StyleSheet } from 'react-native';
+import { View, TextInput, FlatList, TouchableOpacity, Text, Input, StyleSheet, ImageBackground } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
@@ -125,17 +125,17 @@ class SearchScreen extends Component {
         }else{
           return (
             <View style={styles.container}>
-              <View style={styles.welcomeContainer}><Text style={{fontSize: 25, color: 'white'}}>Find your friends here!</Text>
-              <TextInput style={styles.textinput}
+              <ImageBackground source={require('../assets/header.jpg')} style={styles.bgImage}>
+                <View style={styles.welcomeContainer} multiline={true}><Text style={styles.welcome}>Find your friends here!</Text>
+                  <TextInput style={styles.textinput}
                     placeholder="Search for your friend"
-                    onChangeText={(friendSearch) => this.setState({friendSearch})} 
-                    value={this.state.friendSearch}
-                />
-              <TouchableOpacity 
+                    onChangeText={(friendSearch) => this.setState({friendSearch})}/>
+                    <TouchableOpacity 
                     onPress={()=> this.searchFriend()}>
-                    <Text>Find</Text>
-               </TouchableOpacity>
-              </View>
+                    <Text style={{fontWeight: 'bold', color: 'white'}}>Find</Text>
+                    </TouchableOpacity>
+            </View>
+              </ImageBackground>
                
               <View style={styles.flatlistContainer}>
               <FlatList 
@@ -169,35 +169,46 @@ export default SearchScreen;
 const styles = StyleSheet.create({
   container: 
   {
-    backgroundColor: "dodgerblue",
     flex: 1,
   },
   welcomeContainer:
   {
-    justifyContent: "center",
     alignItems: "center",
-    paddingTop: -50,
-    borderBottomWidth: 2,
-    borderBottomColor: 'white'
+    flex: 0.5,
+    paddingBottom: 20,
   },
   flatlistContainer:
   {
     backgroundColor: 'white',
-    flex: 1,
+    flex: 3,
     paddingHorizontal: 15,
+  },
+  welcome:
+  {
+    alignSelf: 'center',
+    fontSize: 25,
+    color: '#fff',
+    fontWeight: "bold",
+
   },
   textinput:
   {
+    color: 'white',
     borderRadius: 25,
     borderWidth: 1,
     borderColor: '#fff',
-    paddingHorizontal: 5,
-    shadowColor: '#000000',
-    shadowOffset: {
-      width: 1,
-      height: 0.3
-    },
-    shadowRadius: 1,
-    shadowOpacity: 1.0
+    justifyContent: "center",
+    marginTop: "15%",
+    paddingBottom: "3%",
+    paddingTop: "3%",
+    paddingLeft: "5%",
+    paddingRight: "5%",
+    placeholderTextColor: 'white',
+     fontWeight: 'bold',
+    
   },
+  bgImage: 
+  {
+    resizeMode: 'stretch',
+  }
 });

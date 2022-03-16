@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { Text, View, FlatList, TouchableOpacity} from 'react-native';
+import { Text, View, FlatList, TouchableOpacity, StyleSheet, ImageBackground} from 'react-native';
 
 
 class FriendRequestsScreen extends Component {
@@ -163,27 +163,35 @@ render() {
 
     }else{
       return (
-        <View>
-          <FlatList
-                data={this.state.listData}
-                renderItem={({item}) => (
-                    <View>
-                      <Text>{"You've got a new friend request from: " + item.first_name +  " " + item.last_name}</Text>
-                      <TouchableOpacity
-                     onPress={()=> {this.setState({friend: item.user_id})  
-                     this.addFriend()}}>
-                         <Text>Accept friend</Text>
-
-                      </TouchableOpacity>
-                      <TouchableOpacity
-                      onPress={()=> {this.setState({friend: item.user_id})  
-                      this.delFriend()}}>
-                          <Text>Delete friend</Text>
-
-                      </TouchableOpacity>
+        <View style={styles.container}>
+            <ImageBackground source={require('../assets/header.jpg')} style={styles.bgImage}>
+             <View style={styles.welcomeContainer}>
+                <Text style={styles.welcome}>Your friend requests</Text>
+            </View>
+            </ImageBackground>
+                <View style={styles.flatlistContainer}>
+                    <FlatList
+                        data={this.state.listData}
+                        renderItem={({item}) => (
+                            <View>
+                                <Text style={{fontSize: 15, color: 'black', fontWeight: "bold", alignSelf: 'center'}}>{"You've got a new friend request from: " + item.first_name +  " " + item.last_name}</Text>
+                                <View style={{flexDirection: 'row', justifyContent: 'space-evenly'}}>
+                                    <TouchableOpacity
+                                        onPress={()=> {this.setState({friend: item.user_id})  
+                                            this.addFriend()}}>
+                                        <Text style={{color: '#00ff00', paddingBottom: 10}}>Accept friend</Text>
+                                    </TouchableOpacity>
+                      
+                        <TouchableOpacity
+                            onPress={()=> {this.setState({friend: item.user_id})  
+                                this.delFriend()}}>
+                          <Text style={{color: 'red', paddingBottom: 10}}>Delete friend</Text>
+                        </TouchableOpacity>
+                        </View>
                     </View>
-                )}
-              />
+                )}/>
+        </View>       
+              
               <View>
               </View>
         </View>
@@ -193,3 +201,37 @@ render() {
 }
 
     export default FriendRequestsScreen;
+
+
+    const styles = StyleSheet.create({
+        container: 
+        {
+          backgroundColor: "dodgerblue",
+          flex: 1,
+        },
+        welcomeContainer:
+        {
+            alignItems: "center",
+            flex: 0.5,
+            paddingBottom: 60,
+        },
+        flatlistContainer:
+        {
+          backgroundColor: 'white',
+          flex: 3,
+          paddingHorizontal: 15,
+          justifyContent: 'center'
+        },
+        welcome:
+        {
+         marginTop: 45,
+         alignSelf: 'center',
+         fontSize: 25,
+         color: '#fff',
+         fontWeight: "bold",
+        },
+        bgImage: 
+        {
+          resizeMode: 'stretch',
+        }
+      });

@@ -1,8 +1,7 @@
 import React, {Component} from 'react';
-import {View, Text, FlatList, Button, StyleSheet, TouchableOpacity, TextInput, ScrollView} from 'react-native';
+import {View, Text, FlatList, Button, StyleSheet, TouchableOpacity, TextInput, ScrollView, Alert, ImageBackground} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { AutoFocus } from 'expo-camera/build/Camera.types';
 
 
 
@@ -200,6 +199,19 @@ class HomeScreen extends Component {
     }
   };
 
+ postValidation = () =>{
+  
+  const { post }  = this.state ;
+ if(post == '')
+ {
+   Alert.alert('Cannot post an empty message!')
+  }
+ else{
+   this.addPost(this.state.post)
+ }
+}
+
+
   render() {
 
     if (this.state.isLoading){
@@ -219,15 +231,17 @@ class HomeScreen extends Component {
       return (
         
         <View style={styles.container}>
+          <ImageBackground source={require('../assets/header.jpg')} style={styles.bgImage}>
             <View style={styles.welcomeContainer} multiline={true}><Text style={styles.welcome}>{"Welcome to your feed" + " " }</Text>
             <TextInput style={styles.textinput}
                 placeholder='Type your message here...'
                 onChangeText={(post) => this.setState({post})}/>
                 <TouchableOpacity
-                onPress={() => this.addPost(this.state.post)}>
-                <Text >Post Message</Text>
+                onPress={() => this.postValidation(this.state.post)}>
+                <Text style={{fontWeight: 'bold', color: 'white'}}>Post Message</Text>
                 </TouchableOpacity>
             </View>
+            </ImageBackground>
             <View style={{backgroundColor: 'white'}}><Text style={{fontSize: 15, fontWeight: 'bold', alignSelf: 'center', color: 'black'}}>View your posts here: </Text></View>
             
             <View style={styles.flatlistContainer}>
@@ -239,11 +253,11 @@ class HomeScreen extends Component {
                     <View style={{ flexDirection: 'row', justifyContent: "space-evenly", }}>
                     <Text>{"Likes: " + item.numLikes}</Text>
                     </View>
-                    <Text style={styles.userMessage}>{item.text}</Text>
+                    <Text style={styles.userMessage}>{item.author.first_name + ": " + item.text}</Text>
                     
 
 
-                    <View style={{ flexDirection: 'row', justifyContent: "space-evenly", paddingTop: 5, paddingBottom: 45}}>
+                    <View style={{ flexDirection: 'row', justifyContent: "space-evenly", alignItems: "flex-end", paddingTop: 5,}}>
                       <TextInput
                         placeholder='Update your post'
                         onChangeText={(updatePost) => this.setState({ updatePost })} />
@@ -286,7 +300,6 @@ export default HomeScreen;
 const styles = StyleSheet.create({
   container: 
   {
-    backgroundColor: "dodgerblue",
     flex: 1,
   },
 
@@ -294,7 +307,7 @@ const styles = StyleSheet.create({
   {
     paddingTop: "5%",
     backgroundColor: "white",
-    flex: 1,
+    flex: 3,
     paddingHorizontal: 15,
   },
 
@@ -302,34 +315,38 @@ const styles = StyleSheet.create({
   {
     flex: 1,
     backgroundColor: "white",
+    borderWidth: 1,
+    marginVertical: '3%',
       
   },
   welcome:
   {
+    alignSelf: 'center',
     fontSize: 25,
     color: '#fff',
     fontWeight: "bold"
   },
   welcomeContainer:
   {
-    flex: 0.4,
-    justifyContent: "center",
+    flex: 0.5,
     alignItems: "center",
     paddingBottom: 20,
-    borderBottomWidth: 2,
-    borderBottomColor: 'white'
 
   },
   textinput:
   {
+    color: 'white',
     borderRadius: 25,
     borderWidth: 1,
     borderColor: '#fff',
     justifyContent: "center",
+    marginTop: "15%",
     paddingBottom: "3%",
     paddingTop: "3%",
     paddingLeft: "5%",
     paddingRight: "5%",
+    placeholderTextColor: 'white',
+     fontWeight: 'bold',
     
   },
   text:
@@ -342,16 +359,18 @@ const styles = StyleSheet.create({
   
   userMessage:
   {
-    flex: 1,
+    flexShrink: 0.5,
     fontWeight: 'bold',
     color: "white",
     fontSize: 15,
     alignSelf: "center",
     borderColor: 'dodgerblue',
     backgroundColor: "#1084ff",
-    paddingHorizontal: 40,
+    marginHorizontal: '10%',
+    paddingHorizontal: 25,
     paddingTop: 10,
     paddingBottom: 15,
+    marginVertical: '7%',
     borderRadius: 20,
     shadowColor: '#000000',
     shadowOffset: {
@@ -361,9 +380,9 @@ const styles = StyleSheet.create({
     shadowRadius: 3,
     shadowOpacity: 1.0
   },
-  delButton:
+  bgImage: 
   {
-
+    resizeMode: 'stretch'
   }
 
   

@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { Text, View, FlatList, TouchableOpacity} from 'react-native';
+import { Text, View, FlatList, TouchableOpacity, StyleSheet, ImageBackground} from 'react-native';
 
 
 class PostsScreen extends Component {
@@ -149,25 +149,38 @@ class PostsScreen extends Component {
     
         }else {
           return (
-            <View>
+            <View style={styles.container}>
+              <ImageBackground source={require('../assets/header.jpg')} style={styles.bgImage}>
+                  <View style={styles.welcomeContainer}>
+                  <Text style={styles.welcome}>View your friends post here</Text>
+                  </View> 
+              </ImageBackground>
+              <View style={styles.flatlistContainer}>
               <FlatList
                     data={this.state.listData}
                     renderItem={({item}) => (
-                        <View>
-                          <Text>{"Post from " + item.author.first_name + ": " + item.text}</Text>
-                            <Text>{"Likes: " + item.numLikes}</Text>
-                            <TouchableOpacity 
-                                onPress={() => this.likeUserPost(item.author.user_id, item.post_id)}>
-                        <Text>Like?</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity
-                        onPress={() => this.unlikeUserPost(item.author.user_id, item.post_id)}>
-                            <Text>Unlike?</Text>
-
-                        </TouchableOpacity>
+                        <>
+                        
+                      <View style={styles.postContainer}>
+                        <View style={{ flexDirection: 'row', justifyContent: "space-evenly", }}>
+                          <Text style={{fontWeight: 'bold'}}>{"Likes: " + item.numLikes}</Text>
                         </View>
-                    )}
-                  />
+                        <Text style={styles.userMessage}>{item.author.first_name + ": " + item.text}</Text>
+                      <View style={{ flexDirection: 'row', justifyContent: "space-evenly", alignItems: "flex-end", paddingTop: 5,}}>
+                          <TouchableOpacity
+                            onPress={() => this.likeUserPost(item.author.user_id, item.post_id)}>
+                            <Text style={{fontWeight: 'bold', color: 'green'}}>Like?</Text>
+                          </TouchableOpacity>
+                          <TouchableOpacity
+                            onPress={() => this.unlikeUserPost(item.author.user_id, item.post_id)}>
+                            <Text style={{fontWeight: 'bold', color: 'red'}}>Unlike?</Text>
+                          </TouchableOpacity>
+                      </View>
+                      </View></>
+                        
+                    )}/>
+              </View>  
+                  
             </View>
           );
         }
@@ -188,3 +201,72 @@ class PostsScreen extends Component {
 
 
 export default PostsScreen
+
+const styles = StyleSheet.create({
+  container: 
+  {
+    backgroundColor: "dodgerblue",
+    flex: 1,
+  },
+
+  flatlistContainer:
+  {
+    paddingTop: "5%",
+    backgroundColor: "white",
+    flex: 3,
+    paddingHorizontal: 15,
+  },
+
+  postContainer:
+  {
+    flex: 1,
+    backgroundColor: "white",
+    borderWidth: 1,
+    marginVertical: '3%',
+    marginHorizontal: '3%'
+    
+      
+  },
+  welcome:
+  {
+   marginTop: 45,
+   alignSelf: 'center',
+   fontSize: 25,
+   color: '#fff',
+   fontWeight: "bold",
+  },
+  welcomeContainer:
+  {
+    flex: 1,
+    alignItems: "center",
+    paddingBottom: 60,
+
+  },
+  userMessage:
+  {
+    flexShrink: 0.5,
+    fontWeight: 'bold',
+    color: "white",
+    fontSize: 15,
+    alignSelf: "center",
+    borderColor: 'dodgerblue',
+    backgroundColor: "#1084ff",
+    paddingHorizontal: 40,
+    marginHorizontal: '10%',
+    paddingTop: 10,
+    paddingBottom: 15,
+    marginVertical: '7%',
+    borderRadius: 20,
+    shadowColor: '#000000',
+    shadowOffset: {
+      width: 1,
+      height: 3
+    },
+    shadowRadius: 3,
+    shadowOpacity: 1.0
+  },
+  bgImage: 
+  {
+    resizeMode: 'stretch',
+  }
+})

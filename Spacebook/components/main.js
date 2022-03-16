@@ -20,11 +20,11 @@ render() {
   return (
     
     <Tab.Navigator>
-      <Tab.Screen name="Home" component={HomeScreen} />
-      <Tab.Screen name="Search" component={SearchScreen} />
+      <Tab.Screen name="Home" component={HomeScreen} options={{headerShown: false}} />
+      <Tab.Screen name="Search" component={SearchScreen} options={{headerShown: false}}/>
       <Tab.Screen name="Friends" component={Navigation} options={{headerShown: false}} />
-      <Tab.Screen name="Friend Requests" component={FriendRequestScreen} />
-      <Tab.Screen name="Profile" component={UserProfileScreen} />
+      <Tab.Screen name="Friend Requests" component={FriendRequestScreen} options={{headerShown: false}} />
+      <Tab.Screen name="Profile" component={UserProfileScreen} options={{headerShown: false}} />
       <Tab.Screen name="Camera" component={CameraScreen} options={{tabBarVisible: false}}/>
     </Tab.Navigator>
   );
