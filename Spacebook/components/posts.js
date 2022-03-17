@@ -10,7 +10,6 @@ class PostsScreen extends Component {
       this.state = {
         isLoading: true,
         listData: [],
-
       }
     }
     componentDidMount() {
@@ -186,16 +185,6 @@ class PostsScreen extends Component {
         }
         
       }
-
-
-
-
-
-
-
-
-
-
 
 }
 

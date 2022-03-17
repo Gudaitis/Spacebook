@@ -17,7 +17,8 @@ class HomeScreen extends Component {
       isLoading: true,
       listData: [],
       post: "",
-      updatePost: ""
+      updatePost: "",
+      getValue : ""
 
     }
   }
@@ -26,6 +27,7 @@ class HomeScreen extends Component {
     this.unsubscribe = this.props.navigation.addListener('focus', () => {
       this.checkLoggedIn();
       this.getPost();
+      AsyncStorage.getItem('Key_27').then((saveMessage) => this.setState({ getValue : saveMessage }))
     });
   }
 
@@ -47,6 +49,8 @@ class HomeScreen extends Component {
         })
         .then((res) => {
           this.getPost();
+          this.setState(getValue)
+          this.setState(post)
         })
         .then((response) => {
           if(response.status === 200){
@@ -202,14 +206,48 @@ class HomeScreen extends Component {
  postValidation = () =>{
   
   const { post }  = this.state ;
- if(post == '')
+ if(post != '')
  {
-   Alert.alert('Cannot post an empty message!')
-  }
- else{
    this.addPost(this.state.post)
- }
+  }
+  else{
+    console.log("Cannot post an empty message!")
+  }
 }
+
+setValueLocally=()=>{
+  const {post} = this.state;
+  this.removeData();
+  if(post == '')
+  {
+    console.log("You cannot save an empty message!")
+  }
+  else{
+    AsyncStorage.setItem('Key_27', this.state.post);
+    console.log("You have saved your message" + " " +this.state.post)
+
+  }
+
+}
+getValueLocally=()=>{
+
+ 
+  AsyncStorage.getItem('Key_27').then((saveMessage) => this.setState({ getValue : saveMessage }))
+  this.addPost(this.state.getValue)
+}
+catch(error){
+  console.log(error);
+}
+removeData = async () => {
+  try {
+  await AsyncStorage.removeItem('@Key_27');
+  this.getPost();
+  } 
+  catch(exception) {
+    return false;
+}
+}
+
 
 
   render() {
@@ -237,9 +275,18 @@ class HomeScreen extends Component {
                 placeholder='Type your message here...'
                 onChangeText={(post) => this.setState({post})}/>
                 <TouchableOpacity
-                onPress={() => this.postValidation(this.state.post)}>
+                onPress={() => this.postValidation()}>
                 <Text style={{fontWeight: 'bold', color: 'white'}}>Post Message</Text>
                 </TouchableOpacity>
+                <TouchableOpacity
+                onPress={() => this.setValueLocally()}>
+                  <Text style={{fontWeight: 'bold', color: 'white'}}>Save message</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                onPress={() => this.getValueLocally()}>
+                  <Text style={{fontWeight: 'bold', color: 'white'}}>Post your saved message</Text>
+                </TouchableOpacity>
+                <Text style={{color: 'white'}}></Text>
             </View>
             </ImageBackground>
             <View style={{backgroundColor: 'white'}}><Text style={{fontSize: 15, fontWeight: 'bold', alignSelf: 'center', color: 'black'}}>View your posts here: </Text></View>
