@@ -82,6 +82,9 @@ class PostsScreen extends Component {
                 throw 'Server Error';
               }
           })
+          .then((res) => {
+            this.getUserPost(friend_id);
+          })
 
             .catch((error) => {
                 console.log(error);
@@ -110,7 +113,7 @@ class PostsScreen extends Component {
               }
           })
               .then((res) => {
-                this.getUserPost(friend_id);
+                this.getUserPost();
               })
             .catch((error) => {
                 console.log(error);

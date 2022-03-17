@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { StyleSheet, Text, View, FlatList, TouchableOpacity, ScrollView, Button, Image} from 'react-native';
+import { StyleSheet, Text, View, FlatList, TouchableOpacity, ScrollView, Button, Image, ImageBackground} from 'react-native';
 import { TextInput } from 'react-native-gesture-handler';
 import { Camera } from 'expo-camera';
 
@@ -216,24 +216,30 @@ class UserProfileScreen extends Component {
     
         }else{
           return (
-            <View>
+            <View style={styles.container}>
+              <ImageBackground source={require('../assets/header.jpg')} style={styles.bgImage}>
+              <View style={{flexDirection: 'row', flex: 1, marginVertical: '5%', justifyContent: 'space-evenly', }}>
               <Image
             source={{
               uri: this.state.photo,
             }}
             style={{
-              width: 200,
-              height: 200,
-              borderWidth: 5 
+              width: 100,
+              height: 100,
+              borderWidth: 2,
+              borderRadius: 25,
             }}
           />
-              
-                <Text>{"Hello " + this.state.listData.first_name + " " + this.state.listData.last_name + "\n" + "Your current email address is: " + this.state.listData.email + "\n" + "You currently have: " + this.state.listData.friend_count + " friends!"} </Text>
-
-                <Button
+                
+                <Text style={styles.text}>{"Hello " + this.state.listData.first_name + " " + this.state.listData.last_name + "\n" + "Your current email address is: " + this.state.listData.email + "\n" + "You currently have: " + this.state.listData.friend_count + " friends!"} </Text>
+                </View>
+                </ImageBackground>
+                <View>
+                  <View>
+                <Button 
                 title="Update your profile picture"
                 onPress={() => this.props.navigation.navigate("Camera")}/>
-                
+                  </View>
                 <TextInput
                placeholder='Enter your first name'
                onChangeText={(first_name) => this.setState({first_name})}
@@ -263,21 +269,20 @@ class UserProfileScreen extends Component {
                secureTextEntry
                style={{padding:5, borderWidth:1, margin:5}}
                ></TextInput>
-        
                <Button
                title="Update your details"
                onPress={() => this.updateUserProfile()}
               
                ></Button>
-               
-                <ScrollView>
+               <View>
+                <ScrollView >
                     <Button
                     title="Logout"
                     onPress={() => this.logout()}>    
                     </Button>
                 </ScrollView>
-                  <View>
-                  </View>
+                </View>
+                </View>
             </View>
           );
     }
@@ -299,19 +304,10 @@ const styles = StyleSheet.create({
   camera: {
     flex: 1,
   },
-  buttonContainer: {
-    flex: 1,
-    backgroundColor: 'transparent',
-    flexDirection: 'row',
-    margin: 20,
-  },
-  button: {
-    flex: 0.1,
-    alignSelf: 'flex-end',
-    alignItems: 'center',
-  },
   text: {
-    fontSize: 18,
+    fontSize: 14,
     color: 'white',
+    fontWeight: 'bold',
+    alignSelf: 'center'
   },
 });
