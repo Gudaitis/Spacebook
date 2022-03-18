@@ -4,9 +4,7 @@ import {
   View, Text, FlatList, StyleSheet, TouchableOpacity, TextInput, ImageBackground,
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
-const Tab = createBottomTabNavigator();
 
 class HomeScreen extends Component {
   constructor(props) {
@@ -355,6 +353,12 @@ class HomeScreen extends Component {
                     onPress={() => this.likePost(item.post_id)}
                   >
                     <Text>Like?</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                  
+                    onPress={() => this.props.navigation.navigate("Single Post", {"id":item.author.user_id, "post_id": item.post_id})}
+                  >
+                    <Text>test?</Text>
                   </TouchableOpacity>
                 </View>
 
