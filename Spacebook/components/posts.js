@@ -177,6 +177,10 @@ class PostsScreen extends Component {
                             onPress={() => this.unlikeUserPost(item.author.user_id, item.post_id)}>
                             <Text style={{fontWeight: 'bold', color: 'red'}}>Unlike?</Text>
                           </TouchableOpacity>
+                          <TouchableOpacity
+                          onPress={() => this.props.navigation.navigate("Single Post", {"id":item.author.user_id, "post_id": item.post_id})}>
+                            <Text>View post</Text>
+                          </TouchableOpacity>
                       </View>
                       </View></>
                         

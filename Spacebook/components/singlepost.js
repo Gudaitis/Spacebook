@@ -14,16 +14,7 @@ class SinglePostScreen extends Component {
 
     this.state = {
       isLoading: true,
-      // listData: [],
-      listData: [{
-        post_id: '',
-        text: '',
-        timestamp: '',
-        author: [{
-          user_id: '', first_name: '', last_name: '', email: '',
-        }],
-        numLikes: '',
-      }],
+      listData: [],
     }
   }
   componentDidMount() {
@@ -105,22 +96,14 @@ class SinglePostScreen extends Component {
         <View style={styles.container}>
         <ImageBackground source={require('../assets/header.jpg')} style={styles.bgImage}>
             <View>
-            <Text >Viewing a single post!</Text>
+            <Text style={styles.welcome}>Viewing a single post!</Text>
             </View> 
         </ImageBackground>
-        <View style={styles.flatlistContainer}>
-        <FlatList
-                    data={this.state.listData}
-                    renderItem={({item}) => (
-                        <>
-                      <View style={styles.postContainer}>
-                        <Text>{this.state.author.first_name + ": " + item.text}</Text>
-                      </View></>
-                        
-                    )}/>
-        </View>  
-            
-      </View>
+          <View style={styles.postContainer}>
+          <Text style={styles.userMessage}>{this.state.listData.author.first_name + ": " + this.state.listData.text}</Text>
+          </View>
+       </View>  
+
 
     );
   }
@@ -136,22 +119,12 @@ class SinglePostScreen extends Component {
         {
           flex: 1,
         },
-      
-        flatlistContainer:
-        {
-          paddingTop: '5%',
-          backgroundColor: 'white',
-          flex: 3,
-          paddingHorizontal: 15,
-        },
-      
+        
         postContainer:
         {
-          flex: 1,
           backgroundColor: 'white',
-          borderWidth: 1,
           marginVertical: '3%',
-      
+          flex: 3
         },
         welcome:
         {
@@ -162,9 +135,10 @@ class SinglePostScreen extends Component {
         },
         welcomeContainer:
         {
-          flex: 0.5,
+          flex: 1,
           alignItems: 'center',
           paddingBottom: 20,
+          marginBottom: '20%',
       
         },
         textinput:
@@ -195,7 +169,7 @@ class SinglePostScreen extends Component {
         {
           flexShrink: 0.5,
           fontWeight: 'bold',
-          color: 'black',
+          color: 'white',
           fontSize: 15,
           alignSelf: 'center',
           borderColor: 'dodgerblue',

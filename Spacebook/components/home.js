@@ -326,6 +326,12 @@ class HomeScreen extends Component {
               <View style={styles.postContainer}>
                 <View style={{ flexDirection: 'row', justifyContent: 'space-evenly' }}>
                   <Text>{`Likes: ${item.numLikes}`}</Text>
+                  <TouchableOpacity
+                  
+                    onPress={() => this.props.navigation.navigate("Single Post", {"id":item.author.user_id, "post_id": item.post_id})}
+                  >
+                    <Text>View this post</Text>
+                    </TouchableOpacity>
                 </View>
                 <Text style={styles.userMessage}>{`${item.author.first_name}: ${item.text}`}</Text>
 
@@ -354,12 +360,7 @@ class HomeScreen extends Component {
                   >
                     <Text>Like?</Text>
                   </TouchableOpacity>
-                  <TouchableOpacity
                   
-                    onPress={() => this.props.navigation.navigate("Single Post", {"id":item.author.user_id, "post_id": item.post_id})}
-                  >
-                    <Text>test?</Text>
-                  </TouchableOpacity>
                 </View>
 
               </View>
