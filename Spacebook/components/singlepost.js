@@ -67,7 +67,6 @@ class SinglePostScreen extends Component {
             listData: responseJson,
   
         })
-        console.log(responseJson)
     })
       .catch((error) => {
         console.log(error);
@@ -95,7 +94,7 @@ class SinglePostScreen extends Component {
     return (
         <View style={styles.container}>
         <ImageBackground source={require('../assets/header.jpg')} style={styles.bgImage}>
-            <View>
+            <View style={styles.welcomeContainer}>
             <Text style={styles.welcome}>Viewing a single post!</Text>
             </View> 
         </ImageBackground>
@@ -123,38 +122,21 @@ class SinglePostScreen extends Component {
         postContainer:
         {
           backgroundColor: 'white',
-          marginVertical: '3%',
-          flex: 3
+          flex: 1,
+          justifyContent: 'center'
         },
         welcome:
         {
-          alignSelf: 'center',
           fontSize: 25,
           color: '#fff',
           fontWeight: 'bold',
+          marginTop: '10%',
+          alignSelf: 'center'
         },
         welcomeContainer:
         {
           flex: 1,
-          alignItems: 'center',
-          paddingBottom: 20,
-          marginBottom: '20%',
-      
-        },
-        textinput:
-        {
-          color: 'white',
-          borderRadius: 25,
-          borderWidth: 1,
-          borderColor: '#fff',
-          justifyContent: 'center',
-          marginTop: '15%',
-          paddingBottom: '3%',
-          paddingTop: '3%',
-          paddingLeft: '5%',
-          paddingRight: '5%',
-          placeholderTextColor: 'white',
-          fontWeight: 'bold',
+          marginBottom: "10%"
       
         },
         text:
